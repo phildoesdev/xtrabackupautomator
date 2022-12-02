@@ -1,0 +1,31 @@
+# Timer to run the XtraBackupAutomator service on an interval we expect
+# description of settings: https://www.freedesktop.org/software/systemd/man/systemd.service.html
+# description of timer setttings: https://www.freedesktop.org/software/systemd/man/systemd.timer.html
+# description of the OnCalendar expected format: https://www.freedesktop.org/software/systemd/man/systemd.time.html#
+# link to information about systemd timers https://opensource.com/article/20/7/systemd-timers
+# systemd-analyze calendar "*:25:0" - every hour at the 25 min mark
+# systemd-analyze calendar "00/2:25:0" - every 2 hours at the 25 min mark
+
+[Unit]
+Description=Timer for the xtrabackupautomator service which managers our DB backups
+
+[Timer]
+Unit=xtrabackupautomator.service
+
+# ### Setting backups to be at a few specific times throughout the day
+# 1:25am est
+OnCalendar=6:25:0
+# 5:25am est
+OnCalendar=10:25:0
+# 12:25pm est
+OnCalendar=17:25:0
+# 6:25pm est
+OnCalendar=23:25:0
+# 9:25pm est
+OnCalendar=02:25:0
+
+AccuracySec=5min
+Persistent=false
+
+[Install]
+WantedBy=timers.target

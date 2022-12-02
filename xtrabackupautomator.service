@@ -1,0 +1,12 @@
+# Service to run the xtraBackupAutomator Program
+# description of settings: https://www.freedesktop.org/software/systemd/man/systemd.service.html
+# link to information about systemd timers https://opensource.com/article/20/7/systemd-timers
+# We are only want to start this service 'After=mysql.service', or after mysql starts
+
+[Unit]
+Description=Run the XtraBackupAutomator program. Automates XtraBackup
+After=mysql.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /lib/xtrabackupautomator/xtrabackupautomator.py
