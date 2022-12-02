@@ -278,6 +278,7 @@ before allowing a backup to occur but this has not been necessary for me persona
   - https://medium.com/codex/setup-a-python-script-as-a-service-through-systemctl-systemd-f0cc55a42267
 - Systemctl Timers Overview
   - https://linuxconfig.org/how-to-schedule-tasks-with-systemd-timers-in-linux
+  - https://opensource.com/article/20/7/systemd-timers
 - Systemctl Services Details
   - https://www.freedesktop.org/software/systemd/man/systemd.service.html
 - Systemctl Timers Details
