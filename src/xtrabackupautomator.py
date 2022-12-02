@@ -62,8 +62,8 @@ class XtraBackupAutomator:
         # Pulled all configs into the main file to keep this program simple and one file
         self._config_structs = {
             "db": {
-                "un": "autoXtraBackup",
-                "pw": "wLffEHhZsf.@Wv!aVqUL8L",
+                "un": "YOURUSER",
+                "pw": "YOURPASS",
                 "host": "localhost",
                 "port": "3306"
             },
