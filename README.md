@@ -31,7 +31,7 @@ create the program they need with ease
 - Easy to read, well commented, one file implementation
 
 ## Todo
-- Pull out the comonailities between _create_full_backup && _create_partial_backup to their own method
+- Pull out the commonalitiesso between _create_full_backup && _create_partial_backup to their own method
   - This isn't very complicated as the pepxect portion of these methods have turned out to be almost identical. This will likely come soon
 - Add rough 'unzip and restore backup' instructions
   - I think it would be helpful to at the very least give a little sample of unzipping an archived backup
@@ -106,7 +106,7 @@ create the program they need with ease
 
     -incrementalfolder_perfix
         [DEFAULT_VALUE: "inc_"]
-        Folder name prefix for incrmental backups. 
+        Folder name prefix for incremental backups. 
         Suffixed with the current number of incremental backups minus one
         e.g. 'inc_0'
 
@@ -125,14 +125,14 @@ create the program they need with ease
 
     -archive_zip_format
         [DEFAULT_VALUE: "gztar"]
-        The default archive file type. I like tarballs because they zip our large database into a managable file. 
+        The default archive file type. I like tarballs because they zip our large database into a manageable file. 
         However, tarballs can take a long time to create and require a fair amount of resources if your DB is large. 
-        This setting will depend on your system and the size of your DB. I recomend playing around with this.
+        This setting will depend on your system and the size of your DB. I recommend playing around with this.
         Other zip options: [Shutil Man Page](https://docs.python.org/3/library/shutil.html#shutil.make_archive)
 
     -archived_bu_count
         [DEFAULT_VALUE: 7]
-        Keep x achived backups, once this threshold is reached the oldest archive will be deleted.
+        Keep x archived backups, once this threshold is reached the oldest archive will be deleted.
         Archiving daily, this is a week of archives.
 
     -enforce_max_num_bu_before_archive
@@ -153,7 +153,7 @@ create the program they need with ease
         This will archive what ever base or incremental folders exist if a backup is happening within the 
           archive_at_utc_24_hour hour. This is intended to make it easier to schedule when your archive and base backup occur. 
         These can be resource intensive and so it is nice to do at off hours.
-        *If this program is scheduled to run more than once durring the 'archive_at_utc_24_hour' hour each run will cause an archive.
+        *If this program is scheduled to run more than once during the 'archive_at_utc_24_hour' hour each run will cause an archive.
 
     -archive_at_utc_24_hour
         [DEFAULT_VALUE: 6]
@@ -238,7 +238,7 @@ before allowing a backup to occur but this has not been necessary for me persona
 >$ sudo chmod 700 /lib/xtrabackupautomator
 >```
 >
->___Create the direcotries for our backups to save to___
+>___Create the directories for our backups to save to___
 >```
 >$ sudo mkdir -p /data/backups/mysql
 >$ sudo mkdir -p /data/backups/archive

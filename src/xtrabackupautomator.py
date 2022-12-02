@@ -197,7 +197,7 @@ class XtraBackupAutomator:
     def _get_config_file_incrementalfolder_perfix(self):
         """
         Get the incrementalfolder_perfix field from the general config.
-        Folder name prefix for incrmental backups.
+        Folder name prefix for incremental backups.
         Suffixed with the current number of incremental backups minus one
         e.g. 'inc_0'
         :return: str
@@ -229,7 +229,7 @@ class XtraBackupAutomator:
         This will archive what ever base or incremental folders exist if a backup is happening within the
           archive_at_utc_24_hour hour. This is intended to make it easier to schedule when your archive and base backup occur.
         These can be resource intensive and so it is nice to do at off hours.
-        *If this program is scheduled to run more than once durring the 'archive_at_utc_24_hour' hour each run will cause an archive.
+        *If this program is scheduled to run more than once during the 'archive_at_utc_24_hour' hour each run will cause an archive.
 
         :return: bool
         """
@@ -257,9 +257,9 @@ class XtraBackupAutomator:
 
     def _get_config_archive_archive_zip_format(self):
         """
-         The default archive file type. I like tarballs because they zip our large database into a managable file.
+         The default archive file type. I like tarballs because they zip our large database into a manageable file.
         However, tarballs can take a long time to create and require a fair amount of resources if your DB is large.
-        This setting will depend on your system and the size of your DB. I recomend playing around with this.
+        This setting will depend on your system and the size of your DB. I recommend playing around with this.
         Other zip options: [Shutil Man Page](https://docs.python.org/3/library/shutil.html#shutil.make_archive)
         :return: str
         """
