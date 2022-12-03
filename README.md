@@ -216,10 +216,6 @@ manually via command line a couple times, in a preproduction environment, to ver
 
 I am assuming that you have downloaded the required files listed at the top of this readme and placed them somewhere you can manipulate.
 
-_**Unrelated to XtraBackupAutomator, if your XtraBackup and MySQL versions do not match this can cause 
-tremendously negative side effects with the Percona XtraBackup software. I have considered adding this check 
-before allowing a backup to occur but this has not been necessary for me personally.**_
-
 >___Review Your Config Settings___
 >>Review the config section of this readme and alter these settings to your liking.<br>
 >Any altered folder paths may affect the create folder instructions below. Alter as necessary.
