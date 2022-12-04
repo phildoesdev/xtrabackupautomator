@@ -33,8 +33,6 @@ create the program they need with ease
 ## Todo
 - Pull out the commonalitiesso between _create_full_backup && _create_partial_backup to their own method
   - This isn't very complicated as the pepxect portion of these methods have turned out to be almost identical. This will likely come soon
-- Add rough 'unzip and restore backup' instructions
-  - I think it would be helpful to at the very least give a little sample of unzipping an archived backup
 
 ## Requirements
 
