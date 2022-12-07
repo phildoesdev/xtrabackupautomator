@@ -251,7 +251,7 @@ I am assuming that you have downloaded the required files listed at the top of t
 >$ sudo mv xtrabackupautomator.timer /etc/systemd/system/.
 >```
 >
->___Enable your servie and timer___
+>___Enable your service and timer___
 >```
 >$ sudo systemctl daemon-reload
 >
