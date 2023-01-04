@@ -138,14 +138,18 @@ ___Unzipping and Restoring your Backup___
 
 I have included a link in the [Sources & Links](#sources--links) section on [unzipping tar gz files](https://linuxize.com/post/how-to-extract-unzip-tar-gz-file/). 
 
-I strongly suggest reading the [official percona documenation](https://docs.percona.com/percona-xtrabackup/8.0/backup_scenarios/incremental_backup.html) on restoring backups.
+I strongly suggest reading the [official Percona documentation](https://docs.percona.com/percona-xtrabackup/8.0/backup_scenarios/incremental_backup.html) on restoring backups.
 
-For a point of a reference I will describe my generic unzip and restore process. I am using the directory `/data/backups/archive/archive_restore/` as a place to unzip and restore from. 
+For a point of a reference, I will describe my generic unzip and restore process. I am using the directory `/data/backups/archive/archive_restore/` as a place to unzip and restore from. 
 
-Executing any of the below commands can obviously be very dangerous as we must stop mysql, wipe the current data, and restore with our prepared backup. [Read the documentation](https://docs.percona.com/percona-xtrabackup/8.0/backup_scenarios/incremental_backup.html) and come up with your own plan! The code below is only meant as a reference and may change greatly with time and environments. Always test your plans in a preprod environment!!
+Executing any of the below commands can obviously be very dangerous as we must stop MySQL, wipe the current data, and restore with our prepared backup. [Read the documentation](https://docs.percona.com/percona-xtrabackup/8.0/backup_scenarios/incremental_backup.html) and come up with your own plan! The code below is only meant as a reference and may change greatly with time and environments. Always test your plans in a preprod environment!!
 
 
 ```bash
+# Verify our version of Percona's XtraBackup and MySQL match before performing a backup... these differences can make restores fail or behave oddly.
+$ sudo mysql --version
+$ sudo xtrabackup --version
+
 # Clean our restore folder, just to be safe
 $ rm -r /data/backups/archive/archive_restore/*
 
