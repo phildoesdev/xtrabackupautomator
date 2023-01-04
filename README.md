@@ -64,6 +64,12 @@ create the program they need with ease
 - [xtrabackupautomator.service](https://github.com/phildoesdev/xtrabackupautomator/blob/main/xtrabackupautomator.service)
 - [xtrabackupautomator.timer](https://github.com/phildoesdev/xtrabackupautomator/blob/main/xtrabackupautomator.timer)
 
+## Considerations Before Installing
+
+I strongly recommend testing this on some sort of preproduction environment first. The thing I've seen most likely to cause trouble is the archival process. By default, this tool uses the gztar 'tarball' as its compression method, which can be resource intensive if you are working on a large database backup. For instance, one of our servers (a Google Cloud Platform virtual machine with 8 vCPU, 32gb RAM, 1000GB SSD persistent disk, running Debian 10) with a ~140GB base backup currently jumps in CPU usage by ~13% for 4 hours, with a handful of 5%-15% jumps in RAM usage, while creating this archive. Another downside of this compression method is that it can take 10-20 minutes to unzip, depending on settings. The benefit of the tarball is that we are able to take these large backups from 140GB to < 10GB and this is worth all that other trouble for us as we want to have two weeks of daily backups. If these down sides are not acceptable, I recommend playing with the archive type as described in the config. I have not personally tested any other methods.
+
+I am assuming that you have administrative access to the server this will run on as installing systemd services and timers requires root access. I see no reason why Cron Jobs could not be used to run this program, but I have never tested that and all documentation references systemd and its tools.
+
 
 ## Installation
 
