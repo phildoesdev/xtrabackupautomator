@@ -310,6 +310,8 @@ and other relevant information below. Most of this information can also be found
   - https://www.freedesktop.org/software/systemd/man/systemd.time.html#
 - Archive Zip Options
   - https://docs.python.org/3/library/shutil.html#shutil.make_archive
+- How to Extract (Unzip) Tar Gz File
+  - https://linuxize.com/post/how-to-extract-unzip-tar-gz-file/
 
 ## License
 GNU General Public License v3.0
