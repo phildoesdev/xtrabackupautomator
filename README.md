@@ -1,4 +1,4 @@
-# XtraBackupAutomation
+# XtraBackupAutomator
 
 ## Table of Contents
 
