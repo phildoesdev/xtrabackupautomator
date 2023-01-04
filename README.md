@@ -125,6 +125,15 @@ $ sudo systemctl start xtrabackupautomator.timer
 $ sudo systemctl status xtrabackupautomator.timer
 ```
 
+___Congrats, you are now installed!___
+
+You have now installed XtraBackup Automator. If you wish to run it manually, you can run the python file, or use my preferred method, the  `systemd start` command to start it and `journalctl` to view its output:
+
+```bash
+$ systemctl start xtrabackupautomator.service
+$ journalctl -f -n 100 -u xtrabackupautomator
+```
+
 
 ## Configuration
 
@@ -286,7 +295,7 @@ and other relevant information below. Most of this information can also be found
 
 - Official Percona XtraBackup Documentation
     - https://docs.percona.com/percona-xtrabackup/8.0/index.html
-- Systemctl Overveiw
+- Systemctl Overview
   - https://fedoramagazine.org/what-is-an-init-system/ 
   - https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units
   - https://medium.com/codex/setup-a-python-script-as-a-service-through-systemctl-systemd-f0cc55a42267
