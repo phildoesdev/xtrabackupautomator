@@ -69,55 +69,62 @@ manually via command line a couple times, in a preproduction environment, to ver
 
 I am assuming that you have downloaded the required files listed at the top of this readme and placed them somewhere you can manipulate.
 
->___Review Your Config Settings___
->>Review the [Configuration](#configuration) section of this readme and alter these settings to your liking.<br>
->Any altered folder paths may affect the create folder instructions below. Alter as necessary.
-> 
->___Edit your systemd service and timer___
->> If you change the location that the script should run from you must alter the file path in the xtrabackupautomator.service file. 
->>I will not explain much else here as there is a lot that might go into these settings. I have given some default settings that hopefully make sense. 
->>
->>I have also included several links that describe what is possible in the [Sources & Links](#sources--links) section. If there are specific questions in the future I >>will address them here.
-> 
->___Install the required dependencies___
->```
->$ python3 -m pip install pexpect
->```
->___Create the directory for our code to live in___
->``` 
->$ sudo mkdir /lib/xtrabackupautomator
->$ sudo chmod 700 /lib/xtrabackupautomator
->```
->
->___Create the directories for our backups to save to___
->```
->$ sudo mkdir -p /data/backups/mysql
->$ sudo mkdir -p /data/backups/archive
->$ sudo mkdir -p /data/backups/archive/archive_restore
->
->$ sudo chmod 760 /data/backups/mysql
->$ sudo chmod 700 /data/backups/archive
->$ sudo chmod 700 /data/backups/archive/archive_restore
->$ sudo chown -R root:root /data/backups/
->```
->
->___Move your downloaded files___
->```
->$ sudo mv xtrabackupautomator.py /lib/xtrabackupautomator/.
->$ sudo mv xtrabackupautomator.service /etc/systemd/system/.
->$ sudo mv xtrabackupautomator.timer /etc/systemd/system/.
->```
->
->___Enable your service and timer___
->```
->$ sudo systemctl daemon-reload
->
->$ sudo systemctl enable xtrabackupautomator.service
->$ sudo systemctl enable xtrabackupautomator.timer
->
->$ sudo systemctl start xtrabackupautomator.timer
->$ sudo systemctl status xtrabackupautomator.timer
->```
+___Review Your Config Settings___
+
+Review the [Configuration](#configuration) section of this readme and alter these settings to your liking.<br>
+Any altered folder paths may affect the create folder instructions below. Alter as necessary.
+ 
+___Edit your systemd service and timer___
+
+If you change the location that the script should run from you must alter the file path in the xtrabackupautomator.service file. 
+I will not explain much else here as there is a lot that might go into these settings. I have given some default settings that hopefully make sense. 
+
+I have also included several links that describe what is possible in the [Sources & Links](#sources--links) section. If there are specific questions in the future I will address them here.
+ 
+___Install the required dependencies___
+
+```
+$ python3 -m pip install pexpect
+```
+___Create the directory for our code to live in___
+
+``` 
+$ sudo mkdir /lib/xtrabackupautomator
+$ sudo chmod 700 /lib/xtrabackupautomator
+```
+
+___Create the directories for our backups to save to___
+
+```
+$ sudo mkdir -p /data/backups/mysql
+$ sudo mkdir -p /data/backups/archive
+$ sudo mkdir -p /data/backups/archive/archive_restore
+
+$ sudo chmod 760 /data/backups/mysql
+$ sudo chmod 700 /data/backups/archive
+$ sudo chmod 700 /data/backups/archive/archive_restore
+$ sudo chown -R root:root /data/backups/
+```
+
+___Move your downloaded files___
+
+```
+$ sudo mv xtrabackupautomator.py /lib/xtrabackupautomator/.
+$ sudo mv xtrabackupautomator.service /etc/systemd/system/.
+$ sudo mv xtrabackupautomator.timer /etc/systemd/system/.
+```
+
+___Enable your service and timer___
+
+```
+$ sudo systemctl daemon-reload
+
+$ sudo systemctl enable xtrabackupautomator.service
+$ sudo systemctl enable xtrabackupautomator.timer
+
+$ sudo systemctl start xtrabackupautomator.timer
+$ sudo systemctl status xtrabackupautomator.timer
+```
 
 
 ## Configuration
