@@ -119,7 +119,6 @@ ___Enable your service and timer___
 ```
 $ sudo systemctl daemon-reload
 
-$ sudo systemctl enable xtrabackupautomator.service
 $ sudo systemctl enable xtrabackupautomator.timer
 
 $ sudo systemctl start xtrabackupautomator.timer
