@@ -127,13 +127,68 @@ $ sudo systemctl status xtrabackupautomator.timer
 
 ___Congrats, you are now installed!___
 
-You have now installed XtraBackup Automator. If you wish to run it manually, you can run the python file, or use my preferred method, the  `systemd start` command to start it and `journalctl` to view its output:
+You have now installed XtraBackup Automator, it will begin running automatically according to your xtrabackupautomator.timer file. If you wish to run it manually, you can run the python file, or use my preferred method, the  `systemd start` command to start it and `journalctl` to view its output:
 
 ```bash
 $ systemctl start xtrabackupautomator.service
 $ journalctl -f -n 100 -u xtrabackupautomator
 ```
 
+___Unzipping and Restoring your Backup___
+
+I have included a link in the [Sources & Links](#sources--links) section on [unzipping tar gz files](https://linuxize.com/post/how-to-extract-unzip-tar-gz-file/). 
+
+I strongly suggest reading the [official percona documenation](https://docs.percona.com/percona-xtrabackup/8.0/backup_scenarios/incremental_backup.html) on restoring backups.
+
+For a point of a reference I will describe my generic unzip and restore process. I am using the directory `/data/backups/archive/archive_restore/` as a place to unzip and restore from. 
+
+Executing any of the below commands can obviously be very dangerous as we must stop mysql, wipe the current data, and restore with our prepared backup. [Read the documentation](https://docs.percona.com/percona-xtrabackup/8.0/backup_scenarios/incremental_backup.html) and come up with your own plan! The code below is only meant as a reference and may change greatly with time and environments. Always test your plans in a preprod environment!!
+
+
+```bash
+# Clean our restore folder, just to be safe
+$ rm -r /data/backups/archive/archive_restore/*
+
+# Unzip our archived backup to an empty folder. Always verify we have enough disk space to unzip before unzipping
+$ sudo tar -xvf database_backup_12_23_2022__06_25_10.tar.gz  -C /data/backups/archive/archive_restore/
+
+# Sanity check, verify we are looking at the backup we think we are (This command checks the base folder, check the latest incremental folder we may have)
+$ cd /data/backups/archive/archive_restore/data/backups/mysql/
+$ sudo  cat base/xtrabackup_info | grep 'tool_version\|server_version\|start_time\|end_time\|partial\|incremental'
+
+# Prepare the base
+$ sudo xtrabackup --prepare --apply-log-only --no-server-version-check  --target-dir=/data/backups/archive/archive_restore/data/backups/mysql/base 
+
+# Prepare each incremental folder. This must be done for each incremental folder we wish to back up to.
+$ sudo xtrabackup --prepare --apply-log-only --no-server-version-check --target-dir=/data/backups/archive/archive_restore/data/backups/mysql/base  --incremental-dir=/data/backups/archive/archive_restore/data/backups/mysql/inc_0
+
+# Repeat as necssary....
+...
+
+# Stop SQL and our backup script as we do not want it running mid restore
+$ sudo systemctl stop mysql
+$ sudo systemctl stop xtrabackupautomator.timer
+
+# Wipe bad/corrupted sql data from current instance
+$ sudo rm -rv /var/lib/mysql/*
+
+# Verify our mysql data is wiped
+$ sudo ls /var/lib/mysql
+
+# I use this method to restore my base backup, there are other options but they did not work correctly in my environment
+$ sudo xtrabackup --copy-back --target-dir=/data/backups/archive/archive_restore/data/backups/mysql/base
+
+# Verify the contents are the size we expect as a sanity check and apply the correct ownership to the files
+$ du -hs /var/lib/mysql/
+$ sudo chown -R mysql:mysql /var/lib/mysql
+
+# Restart mysql and xtrabackupautomator. Verify MySQL's status
+$ sudo systemctl start mysql
+$ sudo systemctl xtrabackupautomator.timer
+$ sudo systemctl status mysql
+
+
+```
 
 ## Configuration
 
@@ -295,7 +350,7 @@ and other relevant information below. Most of this information can also be found
 
 - Official Percona XtraBackup Documentation
     - https://docs.percona.com/percona-xtrabackup/8.0/index.html
-- Systemctl Overview
+- Systemctl Overveiw
   - https://fedoramagazine.org/what-is-an-init-system/ 
   - https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units
   - https://medium.com/codex/setup-a-python-script-as-a-service-through-systemctl-systemd-f0cc55a42267
@@ -312,6 +367,8 @@ and other relevant information below. Most of this information can also be found
   - https://docs.python.org/3/library/shutil.html#shutil.make_archive
 - How to Extract (Unzip) Tar Gz File
   - https://linuxize.com/post/how-to-extract-unzip-tar-gz-file/
+- Restoring Xtrabackup Incremental Backups
+  - https://docs.percona.com/percona-xtrabackup/8.0/backup_scenarios/incremental_backup.html
 
 ## License
 GNU General Public License v3.0
