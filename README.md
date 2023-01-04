@@ -4,24 +4,32 @@
 
 - [Introduction](#introduction)
 - [Features](#features)
-- [Todo](#todo)
 - [Requirements](#requirements)
-- [Configuration](#configuration)
+- [Considerations Before Installing](#considerations-before-installing)
 - [Installation](#installation)
+- [Configuration](#configuration)
 - [Sources & Links](#sources--links)
 - [License](#license)
 
 
 ## Introduction
-The intention of this project is to automate Percona's XtraBackup in a way that is easy to understand and manipulate.
-'XtraBackupAutomation' is a simple  program that allows for the scheduling of MySQL backups using systemd and Percona's 
-XtraBackup tool. It also allows automatic archiving of these backups.
 
-This is my first open source project, and I am looking forward to contributing back to the community. Constructive
-feedback and feature requests are welcome as I hope to maintain a useful piece of software for everyone to use.
+[Percona's XtraBackup](https://www.percona.com/software/mysql-database/percona-xtrabackup) is a beautiful tool that allows for the backup and restoration of MySQL databases. 
 
-Thanks!
+From the documentation:
 
+> The Percona XtraBackup tools provide a method of performing a hot backup of your MySQL data while the system is running. Percona XtraBackup is a free, online, open source, complete database backups solution for all versions of Percona Server for MySQL and MySQL®. Percona XtraBackup performs online non-blocking, tightly compressed, highly secure full backups on transactional systems so that applications remain fully available during planned maintenance windows.
+
+ It is great but it quickly becomes difficult to wield when using it multiple times per day across multiple environments. XtraBackup Automator attempts to make this easier by providing the ability to:
+
+* Schedule when we should create backups
+    - times of day, when to make a base backup vs incremental
+* Decide what to do with the base backup and its increments when we are ready to create a new base
+    - Archive old backups
+* Define how many archived backup groups should we keep before removing them from the file system
+    - Maintain x days of backups
+
+To accomplish this I wrote XtraBackupAutomator to automate these backups and then compress them for archival purposes. With this 'XtraBackup Automator' and systemd timers someone can automate away the management of their MySQL backups.
 
 ## Features
 - Scheduled Percona's XtraBackups for MySQL using systemd services and timers
@@ -30,33 +38,97 @@ Thanks!
 create the program they need with ease
 - Easy to read, well commented, one file implementation
 
-## Todo
-- Pull out the commonalitiesso between _create_full_backup && _create_partial_backup to their own method
-  - This isn't very complicated as the pepxect portion of these methods have turned out to be almost identical. This will likely come soon
 
 ## Requirements
 
 #### Developed On
+
 - **OS:**
   - Debian GNU/Linux 10 (buster)
 - **Python Version:**
   - Python 3.10.4
 - **Python Packages**
-  - **Name:** pexpect, **Version:** 4.8.0
+  - **Name:** [pexpect](https://pexpect.readthedocs.io/en/stable/), **Version:** 4.8.0
 - **Percona XtraBackup Version:**
-  - XtraBackup version 8.0.28-21 based on MySQL server 8.0.28 Linux (x86_64)
+  - [XtraBackup](https://www.percona.com/software/mysql-database/percona-xtrabackup) version 8.0.28-21 based on MySQL server 8.0.28 Linux (x86_64)
 - **MySQL**
   - MySql  Ver 8.0.28 for Linux on x86_64 (MySQL Community Server - GPL)
   
 #### Required Python Libraries
-- pexpect 
+
+- [pexpect](https://pexpect.readthedocs.io/en/stable/)
 
 #### Required Files
-- xtrabackupautomator.py
-- xtrabackupautomator.service
-- xtrabackupautomator.timer
+
+- [xtrabackupautomator.py](https://github.com/phildoesdev/xtrabackupautomator/blob/main/src/xtrabackupautomator.py)
+- [xtrabackupautomator.service](https://github.com/phildoesdev/xtrabackupautomator/blob/main/xtrabackupautomator.service)
+- [xtrabackupautomator.timer](https://github.com/phildoesdev/xtrabackupautomator/blob/main/xtrabackupautomator.timer)
+
+
+## Installation
+
+Below is a general explanation of how to install and start running this program. I would suggest running the program 
+manually via command line a couple times, in a preproduction environment, to verify things are working as you expect.
+
+I am assuming that you have downloaded the required files listed at the top of this readme and placed them somewhere you can manipulate.
+
+>___Review Your Config Settings___
+>>Review the [Configuration](#configuration) section of this readme and alter these settings to your liking.<br>
+>Any altered folder paths may affect the create folder instructions below. Alter as necessary.
+> 
+>___Edit your systemd service and timer___
+>> If you change the location that the script should run from you must alter the file path in the xtrabackupautomator.service file. 
+>>I will not explain much else here as there is a lot that might go into these settings. I have given some default settings that hopefully make sense. 
+>>
+>>I have also included several links that describe what is possible in the [Sources & Links](#sources--links) section. If there are specific questions in the future I >>will address them here.
+> 
+>___Install the required dependencies___
+>```
+>$ python3 -m pip install pexpect
+>```
+>___Create the directory for our code to live in___
+>``` 
+>$ sudo mkdir /lib/xtrabackupautomator
+>$ sudo chmod 700 /lib/xtrabackupautomator
+>```
+>
+>___Create the directories for our backups to save to___
+>```
+>$ sudo mkdir -p /data/backups/mysql
+>$ sudo mkdir -p /data/backups/archive
+>$ sudo mkdir -p /data/backups/archive/archive_restore
+>
+>$ sudo chmod 760 /data/backups/mysql
+>$ sudo chmod 700 /data/backups/archive
+>$ sudo chmod 700 /data/backups/archive/archive_restore
+>$ sudo chown -R root:root /data/backups/
+>```
+>
+>___Move your downloaded files___
+>```
+>$ sudo mv xtrabackupautomator.py /lib/xtrabackupautomator/.
+>$ sudo mv xtrabackupautomator.service /etc/systemd/system/.
+>$ sudo mv xtrabackupautomator.timer /etc/systemd/system/.
+>```
+>
+>___Enable your service and timer___
+>```
+>$ sudo systemctl daemon-reload
+>
+>$ sudo systemctl enable xtrabackupautomator.service
+>$ sudo systemctl enable xtrabackupautomator.timer
+>
+>$ sudo systemctl start xtrabackupautomator.timer
+>$ sudo systemctl status xtrabackupautomator.timer
+>```
+
 
 ## Configuration
+
+In an attempt to make this a one file, easy to install piece of software, I included the configuration struct in the xtrabackupautomator.py file, 
+in the `__init__` method of the XtraBackupAutomator class, on line ~60 (as of this writing). I will describe that struct, its default values, 
+and other relevant information below. Most of this information can also be found in comments throughout, or in the getter methods for each variable.
+
 ```
 
 == db ==
@@ -106,13 +178,13 @@ create the program they need with ease
         [DEFAULT_VALUE: "inc_"]
         Folder name prefix for incremental backups. 
         Suffixed with the current number of incremental backups minus one
-        e.g. 'inc_0'
+        e.g., 'inc_0'
 
     -archive_name_prefix
         [DEFAULT_VALUE: "database_backup_"]
         Prefix for the archive files. 
         Suffixed by the datetime of the archive
-        e.g. 'database_backup_11_28_2022__06_25_03.tar.gz'
+        e.g., 'database_backup_11_28_2022__06_25_03.tar.gz'
 
 
 == archive_settings ==
@@ -187,7 +259,7 @@ create the program they need with ease
 == log_settings ==
     -is_enabled
         [DEFAULT_VALUE: True]
-        Enables/Disables all logging type settings. This was useful in testing so I kept it around.
+        Enables/Disables all logging type settings. This was useful in testing, so I kept it around.
 
     -log_child_process_to_screen
         [DEFAULT_VALUE: True]
@@ -206,61 +278,6 @@ create the program they need with ease
         The file name we will try to log to
 
 ```
-
-## Installation
-
-Below is a general explanation of how to install and start running this program. I would suggest running the program 
-manually via command line a couple times, in a preproduction environment, to verify things are working as you expect.
-
-I am assuming that you have downloaded the required files listed at the top of this readme and placed them somewhere you can manipulate.
-
->___Review Your Config Settings___
->>Review the config section of this readme and alter these settings to your liking.<br>
->Any altered folder paths may affect the create folder instructions below. Alter as necessary.
-> 
->___Edit your systemd service and timer___
->> I have not explained how to do this here but have included several links that describe how to do this in the 
->> [Sources & Links](#sources--links) section.
-> 
->___Install the required dependencies___
->```
->$ python3 -m pip install pexpect
->```
->___Create the directory for our code to live in___
->``` 
->$ sudo mkdir /lib/xtrabackupautomator
->$ sudo chmod 700 /lib/xtrabackupautomator
->```
->
->___Create the directories for our backups to save to___
->```
->$ sudo mkdir -p /data/backups/mysql
->$ sudo mkdir -p /data/backups/archive
->$ sudo mkdir -p /data/backups/archive/archive_restore
->
->$ sudo chmod 760 /data/backups/mysql
->$ sudo chmod 700 /data/backups/archive
->$ sudo chmod 700 /data/backups/archive/archive_restore
->$ sudo chown -R root:root /data/backups/
->```
->
->___Move your downloaded files___
->```
->$ sudo mv xtrabackupautomator.py /lib/xtrabackupautomator/.
->$ sudo mv xtrabackupautomator.service /etc/systemd/system/.
->$ sudo mv xtrabackupautomator.timer /etc/systemd/system/.
->```
->
->___Enable your service and timer___
->```
->$ sudo systemctl daemon-reload
->
->$ sudo systemctl enable xtrabackupautomator.service
->$ sudo systemctl enable xtrabackupautomator.timer
->
->$ sudo systemctl start xtrabackupautomator.timer
->$ sudo systemctl status xtrabackupautomator.timer
->```
 
 ## Sources \& Links
 
