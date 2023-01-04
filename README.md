@@ -28,7 +28,7 @@ From the documentation:
 * Maintain x days of archives
     - Define how many archived backup groups should we keep before removing them from the file system
 
-To accomplish this I wrote XtraBackupAutomator to automate away the management of MySQL backups.
+XtraBackupAutomator automates away the management of MySQL backups.
 
 ## Requirements
 
