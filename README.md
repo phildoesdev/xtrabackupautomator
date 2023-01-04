@@ -72,7 +72,7 @@ I am assuming that you have downloaded the required files listed at the top of t
 ___Review Your Config Settings___
 
 Review the [Configuration](#configuration) section of this readme and alter these settings to your liking.<br>
-Any altered folder paths may affect the create folder instructions below. Alter as necessary.
+Any altered folder paths may affect the create folder instructions below. At minimum you must include database login information, but alter as necessary. I suggest reading through all the config options to see what might be interesting to tweak.
  
 ___Edit your systemd service and timer___
 
