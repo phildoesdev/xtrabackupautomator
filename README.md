@@ -25,7 +25,7 @@ From the documentation:
     - Times of day, when to make a base backup vs incremental
 * Archive old backups
     - Decide what to do with the base backup and its increments when we are ready to create a new base
-* Maintain x days of backups
+* Maintain x days of archives
     - Define how many archived backup groups should we keep before removing them from the file system
 
 To accomplish this I wrote XtraBackupAutomator to automate away the management of MySQL backups.
