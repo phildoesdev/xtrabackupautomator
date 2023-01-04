@@ -3,7 +3,6 @@
 ## Table of Contents
 
 - [Introduction](#introduction)
-- [Features](#features)
 - [Requirements](#requirements)
 - [Considerations Before Installing](#considerations-before-installing)
 - [Installation](#installation)
@@ -23,21 +22,13 @@ From the documentation:
  It is great but it quickly becomes difficult to wield when using it multiple times per day across multiple environments. XtraBackup Automator attempts to make this easier by providing the ability to:
 
 * Schedule when we should create backups
-    - times of day, when to make a base backup vs incremental
-* Decide what to do with the base backup and its increments when we are ready to create a new base
-    - Archive old backups
-* Define how many archived backup groups should we keep before removing them from the file system
-    - Maintain x days of backups
+    - Times of day, when to make a base backup vs incremental
+* Archive old backups
+    - Decide what to do with the base backup and its increments when we are ready to create a new base
+* Maintain x days of backups
+    - Define how many archived backup groups should we keep before removing them from the file system
 
-To accomplish this I wrote XtraBackupAutomator to automate these backups and then compress them for archival purposes. With this 'XtraBackup Automator' and systemd timers someone can automate away the management of their MySQL backups.
-
-## Features
-- Scheduled Percona's XtraBackups for MySQL using systemd services and timers
-- Automatic backup archival using python's shutil.make_archive
-- Robust configuration intended to give users the ability to enable/disable features, change file locations, and 
-create the program they need with ease
-- Easy to read, well commented, one file implementation
-
+To accomplish this I wrote XtraBackupAutomator to automate away the management of MySQL backups.
 
 ## Requirements
 
